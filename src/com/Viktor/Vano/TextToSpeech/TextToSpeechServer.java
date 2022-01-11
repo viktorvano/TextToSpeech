@@ -1,11 +1,10 @@
 package com.Viktor.Vano.TextToSpeech;
 
-import com.sun.speech.freetts.Voice;
-import com.sun.speech.freetts.VoiceManager;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import static com.Viktor.Vano.TextToSpeech.TextToSpeech.*;
 
 public class TextToSpeechServer extends Thread{
     private int port;
@@ -17,16 +16,9 @@ public class TextToSpeechServer extends Thread{
     private ServerSocket server = null;
     private DataInputStream in	 = null;
 
-    private VoiceManager voiceManager;
-    private Voice voice;
-
     public TextToSpeechServer(int port){
         this.port = port;
         message = "";
-
-        voiceManager = VoiceManager.getInstance();
-        voice = voiceManager.getVoice("kevin16");
-        voice.allocate();
     }
 
     public void stopServer()
