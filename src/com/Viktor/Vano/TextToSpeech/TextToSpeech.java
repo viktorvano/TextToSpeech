@@ -40,6 +40,8 @@ public class TextToSpeech extends Application {
 
         try{
             port = Integer.parseInt(Objects.requireNonNull(readOrCreateFile("port.txt")));
+            textToSpeechServer = new TextToSpeechServer(port);
+            textToSpeechServer.setDaemon(true);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -55,21 +57,30 @@ public class TextToSpeech extends Application {
         {
             Image icon = new Image(getClass().getResourceAsStream("tts.jpg"));
             stage.getIcons().add(icon);
-            System.out.println("Icon loaded from IDE...");
+            System.out.println("Icon loaded on the first attempt...");
         }catch(Exception e)
         {
             try
             {
                 Image icon = new Image("tts.jpg");
                 stage.getIcons().add(icon);
-                System.out.println("Icon loaded from exported JAR...");
+                System.out.println("Icon loaded on the second attempt...");
             }catch(Exception e1)
             {
                 System.out.println("Icon failed to load...");
             }
         }
 
-        textToSpeechServer = new TextToSpeechServer(port);
+        while (textToSpeechServer == null)
+        {
+            System.out.println("Start sleeping 100 millis.");
+            try{
+                Thread.sleep(100);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
         textToSpeechServer.start();
     }
 
