@@ -111,19 +111,17 @@ public class TextToSpeechServer extends Thread{
                 e.printStackTrace();
             }
 
-            //TODO: bash command
             boolean isWindows = System.getProperty("os.name")
                     .toLowerCase().startsWith("windows");
-            String homeDirectory = System.getProperty("user.home");
             Process process;
             int exitCode = 0;
             try {
                 if (isWindows) {
                     process = Runtime.getRuntime()
-                            .exec(String.format("cmd.exe /c java -jar lib/freetts.jar -voice kevin16 -text Hello World"));
+                            .exec(String.format("cmd.exe /c java -jar lib/freetts.jar -dumpAudio playback.wav -text %s", this.message));
                 } else {
                     process = Runtime.getRuntime()
-                            .exec(String.format("sh -c ls %s", homeDirectory));
+                            .exec(String.format("sh -c java -jar lib/freetts.jar -dumpAudio playback.wav -text %s", this.message));
                 }
                 StreamGobbler streamGobbler =
                         new StreamGobbler(process.getInputStream(), System.out::println);
