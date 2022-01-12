@@ -7,14 +7,5 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="cmudict04" level="project" />
-    <orderEntry type="library" name="cmu_time_awb" level="project" />
-    <orderEntry type="library" name="cmu_us_kal" level="project" />
-    <orderEntry type="library" name="cmulex" level="project" />
-    <orderEntry type="library" name="cmutimelex" level="project" />
-    <orderEntry type="library" name="en_us" level="project" />
-    <orderEntry type="library" name="freetts-jsapi10" level="project" />
-    <orderEntry type="library" name="freetts" level="project" />
-    <orderEntry type="library" name="mbrola" level="project" />
   </component>
 </module>

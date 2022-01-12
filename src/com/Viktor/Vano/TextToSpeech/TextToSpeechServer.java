@@ -1,10 +1,11 @@
 package com.Viktor.Vano.TextToSpeech;
 
+import javax.sound.sampled.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import static com.Viktor.Vano.TextToSpeech.TextToSpeech.*;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 public class TextToSpeechServer extends Thread{
     private int port;
@@ -110,8 +111,66 @@ public class TextToSpeechServer extends Thread{
                 e.printStackTrace();
             }
 
-            voice.speak(message);
+            //TODO: bash command
+            boolean isWindows = System.getProperty("os.name")
+                    .toLowerCase().startsWith("windows");
+            String homeDirectory = System.getProperty("user.home");
+            Process process;
+            int exitCode = 0;
+            try {
+                if (isWindows) {
+                    process = Runtime.getRuntime()
+                            .exec(String.format("cmd.exe /c java -jar lib/freetts.jar -voice kevin16 -text Hello World"));
+                } else {
+                    process = Runtime.getRuntime()
+                            .exec(String.format("sh -c ls %s", homeDirectory));
+                }
+                StreamGobbler streamGobbler =
+                        new StreamGobbler(process.getInputStream(), System.out::println);
+                Executors.newSingleThreadExecutor().submit(streamGobbler);
+
+                exitCode = process.waitFor();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            assert exitCode == 0;
+
+            try
+            {
+                File yourFile = new File("playback.wav");
+                AudioInputStream stream;
+                AudioFormat format;
+                DataLine.Info info;
+                Clip clip;
+
+                stream = AudioSystem.getAudioInputStream(yourFile);
+                format = stream.getFormat();
+                info = new DataLine.Info(Clip.class, format);
+                clip = (Clip) AudioSystem.getLine(info);
+                clip.open(stream);
+                clip.start();
+                Thread.sleep((clip.getMicrosecondLength()/1000) + 250);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         System.out.println("Server stopped successfully.");
+    }
+
+    private static class StreamGobbler implements Runnable {
+        private InputStream inputStream;
+        private Consumer<String> consumer;
+
+        public StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
+            this.inputStream = inputStream;
+            this.consumer = consumer;
+        }
+
+        @Override
+        public void run() {
+            new BufferedReader(new InputStreamReader(inputStream)).lines()
+                    .forEach(consumer);
+        }
     }
 }

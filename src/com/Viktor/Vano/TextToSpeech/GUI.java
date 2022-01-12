@@ -1,5 +1,4 @@
 package com.Viktor.Vano.TextToSpeech;
-import com.sun.speech.freetts.VoiceManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -11,7 +10,6 @@ import javafx.stage.Stage;
 import java.util.Objects;
 
 import static com.Viktor.Vano.TextToSpeech.FileManager.*;
-import static com.Viktor.Vano.TextToSpeech.TextToSpeech.*;
 
 public class GUI extends Application {
     private int port = 7775;
@@ -21,19 +19,6 @@ public class GUI extends Application {
 
     public static void main(String[] args)
     {
-        voiceManager = VoiceManager.getInstance();
-        voice = voiceManager.getVoice("kevin16");
-        while (voice == null)
-        {
-            System.out.println("Voice sleeping 100 millis.");
-            try{
-                Thread.sleep(100);
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-        voice.allocate();
         launch(args);
     }
 

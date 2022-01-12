@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="freetts-jsapi10">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/freetts-jsapi10.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

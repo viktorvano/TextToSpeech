@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="cmudict04">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/cmudict04.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

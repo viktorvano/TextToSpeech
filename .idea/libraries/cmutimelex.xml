@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="cmutimelex">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/cmutimelex.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
