@@ -3,6 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/TextToSpeech_jar</output-path>
     <root id="archive" name="TextToSpeech.jar">
       <element id="module-output" name="TextToSpeech" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/freetts-1.2.2.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

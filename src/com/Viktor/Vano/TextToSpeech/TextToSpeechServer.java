@@ -1,11 +1,8 @@
 package com.Viktor.Vano.TextToSpeech;
 
-import javax.sound.sampled.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.Executors;
-import java.util.function.Consumer;
 
 public class TextToSpeechServer extends Thread{
     private int port;
@@ -16,10 +13,18 @@ public class TextToSpeechServer extends Thread{
     private Socket		 socket = null;
     private ServerSocket server = null;
     private DataInputStream in	 = null;
+    private SpeechUtils speechUtils;
 
     public TextToSpeechServer(int port){
         this.port = port;
         message = "";
+        speechUtils = new SpeechUtils();
+        try{
+            speechUtils.init("kevin16");
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void stopServer()
@@ -42,6 +47,12 @@ public class TextToSpeechServer extends Thread{
         try {
             if(in!=null)
                 in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            speechUtils.terminate();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -111,67 +122,16 @@ public class TextToSpeechServer extends Thread{
                 e.printStackTrace();
             }
 
-            if(run)
+            try
             {
-                boolean isWindows = System.getProperty("os.name")
-                        .toLowerCase().startsWith("windows");
-                Process process;
-                int exitCode = 0;
-                try {
-                    if (isWindows) {
-                        process = Runtime.getRuntime()
-                                .exec(String.format("cmd.exe /c java -jar lib/freetts.jar -dumpAudio playback.wav -text %s", this.message));
-                    } else {
-                        process = Runtime.getRuntime()
-                                .exec(String.format("sh -c java -jar lib/freetts.jar -dumpAudio playback.wav -text %s", this.message));
-                    }
-                    StreamGobbler streamGobbler =
-                            new StreamGobbler(process.getInputStream(), System.out::println);
-                    Executors.newSingleThreadExecutor().submit(streamGobbler);
-
-                    exitCode = process.waitFor();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                assert exitCode == 0;
-
-                try
-                {
-                    File yourFile = new File("playback.wav");
-                    AudioInputStream stream;
-                    AudioFormat format;
-                    DataLine.Info info;
-                    Clip clip;
-
-                    stream = AudioSystem.getAudioInputStream(yourFile);
-                    format = stream.getFormat();
-                    info = new DataLine.Info(Clip.class, format);
-                    clip = (Clip) AudioSystem.getLine(info);
-                    clip.open(stream);
-                    clip.start();
-                    Thread.sleep((clip.getMicrosecondLength()/1000) + 250);
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
+                if(run)
+                    speechUtils.doSpeak(this.message);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
             }
+
         }
         System.out.println("Server stopped successfully.");
-    }
-
-    private static class StreamGobbler implements Runnable {
-        private InputStream inputStream;
-        private Consumer<String> consumer;
-
-        public StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
-            this.inputStream = inputStream;
-            this.consumer = consumer;
-        }
-
-        @Override
-        public void run() {
-            new BufferedReader(new InputStreamReader(inputStream)).lines()
-                    .forEach(consumer);
-        }
     }
 }
