@@ -1,5 +1,5 @@
 # TextToSpeech
- Text to speech that listens on a server socket.
+ Text to speech app that listens on a server socket.
   
   
 ### Server Socket  
