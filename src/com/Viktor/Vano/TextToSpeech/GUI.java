@@ -12,7 +12,7 @@ import java.util.Objects;
 import static com.Viktor.Vano.TextToSpeech.FileManager.*;
 
 public class GUI extends Application {
-    private final String version = "20220117";
+    private final String version = "20220702";
     private int port = 7775;
     private final int width = 400;
     private final int height = 120;
@@ -24,7 +24,8 @@ public class GUI extends Application {
     }
 
     @Override
-    public void start(Stage stage){
+    public void start(Stage stage)
+    {
         Pane pane = new Pane();
 
         Scene scene = new Scene(pane, width, height);
@@ -74,7 +75,8 @@ public class GUI extends Application {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() throws Exception
+    {
         super.stop();
         textToSpeechServer.stopServer();
     }

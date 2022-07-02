@@ -13,18 +13,10 @@ public class TextToSpeechServer extends Thread{
     private Socket		 socket = null;
     private ServerSocket server = null;
     private DataInputStream in	 = null;
-    private SpeechUtils speechUtils;
 
     public TextToSpeechServer(int port){
         this.port = port;
         message = "";
-        speechUtils = new SpeechUtils();
-        try{
-            speechUtils.init("kevin16");
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 
     public void stopServer()
@@ -51,11 +43,38 @@ public class TextToSpeechServer extends Thread{
             e.printStackTrace();
         }
 
-        try {
-            speechUtils.terminate();
-        } catch (Exception e) {
-            e.printStackTrace();
+        this.terminateSpeech();
+    }
+
+    private void speak(String message)
+    {
+        IndependentVoiceSynth independentVoiceSynth = new IndependentVoiceSynth(message);
+        independentVoiceSynth.start();
+        while (independentVoiceSynth.isAlive())
+        {
+            try {
+                Thread.sleep(50);
+            }catch (Exception e)
+            {
+                System.out.println("Thread could not sleep.");
+            }
         }
+    }
+
+    private void terminateSpeech()
+    {
+        IndependentVoiceSynth independentVoiceSynth = new IndependentVoiceSynth(" ");
+        independentVoiceSynth.start();
+        while (independentVoiceSynth.isAlive())
+        {
+            try {
+                Thread.sleep(50);
+            }catch (Exception e)
+            {
+                System.out.println("Thread could not sleep.");
+            }
+        }
+        independentVoiceSynth.terminate();
     }
 
     @Override
@@ -125,7 +144,7 @@ public class TextToSpeechServer extends Thread{
             try
             {
                 if(run)
-                    speechUtils.doSpeak(this.message);
+                    this.speak(this.message);
             }catch (Exception e)
             {
                 e.printStackTrace();

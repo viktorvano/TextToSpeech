@@ -1,8 +1,5 @@
 package com.Viktor.Vano.TextToSpeech;
 
-import java.beans.PropertyVetoException;
-import java.util.Locale;
-
 import javax.speech.AudioException;
 import javax.speech.Central;
 import javax.speech.EngineException;
@@ -10,6 +7,8 @@ import javax.speech.EngineStateError;
 import javax.speech.synthesis.Synthesizer;
 import javax.speech.synthesis.SynthesizerModeDesc;
 import javax.speech.synthesis.Voice;
+import java.beans.PropertyVetoException;
+import java.util.Locale;
 
 public class SpeechUtils {
 
