@@ -30,6 +30,10 @@ public class FileManager {
             {
                 data="7775";
                 writeToFile(filename, data);
+            }else if(data==null && filename.equals("audio.txt"))
+            {
+                data="0";
+                writeToFile(filename, data);
             }
 
             return data;

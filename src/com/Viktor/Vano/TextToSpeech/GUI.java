@@ -81,7 +81,26 @@ public class GUI extends Application {
         Line.Info playbackLine = new Line.Info(SourceDataLine.class);
         ArrayList<Mixer.Info> audios = filterDevices(playbackLine);
 
-        textToSpeechServer = new TextToSpeechServer(port, audios.get(2));
+        int audioIndex = 0;
+        try{
+            audioIndex = Integer.parseInt(Objects.requireNonNull(readOrCreateFile("audio.txt")));
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        if(audios.size()-1 < audioIndex)
+        {
+            audioIndex = 0;
+            writeToFile("audio.txt", "0");
+        }
+
+        System.out.println("\n\nUsing audio output device [" + audioIndex + "]:");
+        Mixer.Info info = audios.get(audioIndex);
+        System.out.println(String.format("Name [%s]\nDescription [%s]", info.getName(), info.getDescription()));
+        System.out.println("\n\n");
+
+        textToSpeechServer = new TextToSpeechServer(port, audios.get(audioIndex));
         textToSpeechServer.start();
     }
 
