@@ -7,10 +7,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Line;
-import javax.sound.sampled.Mixer;
-import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -80,6 +78,14 @@ public class GUI extends Application {
         // Param for playback (input) device.
         Line.Info playbackLine = new Line.Info(SourceDataLine.class);
         ArrayList<Mixer.Info> audios = filterDevices(playbackLine);
+
+        System.out.println("\n\nFound audio devices:\n");
+        for(int i = 0; i < audios.size(); i++)
+        {
+            Mixer.Info info = audios.get(i);
+            System.out.println(String.format("Index [%s]\nName [%s]\nDescription [%s]", i, info.getName(), info.getDescription()));
+            System.out.println("\n");
+        }
 
         int audioIndex = 0;
         try{
