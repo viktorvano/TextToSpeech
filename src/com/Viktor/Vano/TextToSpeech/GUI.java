@@ -7,12 +7,19 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Line;
+import javax.sound.sampled.Mixer;
+import javax.sound.sampled.SourceDataLine;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import static com.Viktor.Vano.TextToSpeech.FileManager.*;
 
 public class GUI extends Application {
-    private final String version = "20220702";
+    private final String version = "20220703";
     private int port = 7775;
     private final int width = 400;
     private final int height = 120;
@@ -70,8 +77,26 @@ public class GUI extends Application {
             }
         }
 
-        textToSpeechServer = new TextToSpeechServer(port);
+        // Param for playback (input) device.
+        Line.Info playbackLine = new Line.Info(SourceDataLine.class);
+        ArrayList<Mixer.Info> audios = filterDevices(playbackLine);
+
+        textToSpeechServer = new TextToSpeechServer(port, audios.get(2));
         textToSpeechServer.start();
+    }
+
+    private static ArrayList<Mixer.Info> filterDevices(final Line.Info supportedLine) {
+        ArrayList<Mixer.Info> result = new ArrayList<>();
+
+        List<Mixer.Info> audioInfo = Arrays.asList(AudioSystem.getMixerInfo());
+        ArrayList<Mixer.Info> infos = new ArrayList<>(audioInfo);
+        for (Mixer.Info info : infos) {
+            Mixer mixer = AudioSystem.getMixer(info);
+            if (mixer.isLineSupported(supportedLine)) {
+                result.add(info);
+            }
+        }
+        return result;
     }
 
     @Override

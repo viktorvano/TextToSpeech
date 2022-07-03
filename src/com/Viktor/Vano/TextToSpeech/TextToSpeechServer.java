@@ -1,5 +1,6 @@
 package com.Viktor.Vano.TextToSpeech;
 
+import javax.sound.sampled.Mixer;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,9 +14,11 @@ public class TextToSpeechServer extends Thread{
     private Socket		 socket = null;
     private ServerSocket server = null;
     private DataInputStream in	 = null;
+    private Mixer.Info info;
 
-    public TextToSpeechServer(int port){
+    public TextToSpeechServer(int port, Mixer.Info info){
         this.port = port;
+        this.info = info;
         message = "";
     }
 
@@ -43,10 +46,10 @@ public class TextToSpeechServer extends Thread{
             e.printStackTrace();
         }
 
-        this.terminateSpeech();
+        //this.terminateSpeech();
     }
 
-    private void speak(String message)
+    /*private void speak(String message)
     {
         IndependentVoiceSynth independentVoiceSynth = new IndependentVoiceSynth(message);
         independentVoiceSynth.start();
@@ -59,9 +62,9 @@ public class TextToSpeechServer extends Thread{
                 System.out.println("Thread could not sleep.");
             }
         }
-    }
+    }*/
 
-    private void terminateSpeech()
+    /*private void terminateSpeech()
     {
         IndependentVoiceSynth independentVoiceSynth = new IndependentVoiceSynth(" ");
         independentVoiceSynth.start();
@@ -75,7 +78,7 @@ public class TextToSpeechServer extends Thread{
             }
         }
         independentVoiceSynth.terminate();
-    }
+    }*/
 
     @Override
     public void run() {
@@ -144,7 +147,10 @@ public class TextToSpeechServer extends Thread{
             try
             {
                 if(run)
-                    this.speak(this.message);
+                {
+                    new CustomTTS(this.message, this.info);
+                    //this.speak(this.message);
+                }
             }catch (Exception e)
             {
                 e.printStackTrace();
