@@ -45,7 +45,7 @@ public class GUI extends Application {
         stage.setResizable(false);
 
         try{
-            port = Integer.parseInt(Objects.requireNonNull(readOrCreateFile("port.txt")));
+            port = Integer.parseInt(Objects.requireNonNull(readOrCreateFile("tts_port.txt")));
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -89,7 +89,7 @@ public class GUI extends Application {
 
         int audioIndex = 0;
         try{
-            audioIndex = Integer.parseInt(Objects.requireNonNull(readOrCreateFile("audio.txt")));
+            audioIndex = Integer.parseInt(Objects.requireNonNull(readOrCreateFile("tts_audio.txt")));
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -98,7 +98,7 @@ public class GUI extends Application {
         if(audios.size()-1 < audioIndex)
         {
             audioIndex = 0;
-            writeToFile("audio.txt", "0");
+            writeToFile("tts_audio.txt", "0");
         }
 
         System.out.println("\n\nUsing audio output device [" + audioIndex + "]:");

@@ -26,11 +26,11 @@ public class FileManager {
             reader.close();
             System.out.println("Reading successful.");
 
-            if(data==null && filename.equals("port.txt"))
+            if(data==null && filename.equals("tts_port.txt"))
             {
                 data="7775";
                 writeToFile(filename, data);
-            }else if(data==null && filename.equals("audio.txt"))
+            }else if(data==null && filename.equals("tts_audio.txt"))
             {
                 data="0";
                 writeToFile(filename, data);
