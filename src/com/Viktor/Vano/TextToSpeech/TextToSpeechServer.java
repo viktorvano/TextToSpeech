@@ -45,41 +45,7 @@ public class TextToSpeechServer extends Thread{
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        //this.terminateSpeech();
     }
-
-    /*private void speak(String message)
-    {
-        IndependentVoiceSynth independentVoiceSynth = new IndependentVoiceSynth(message);
-        independentVoiceSynth.start();
-        while (independentVoiceSynth.isAlive())
-        {
-            try {
-                Thread.sleep(50);
-            }catch (Exception e)
-            {
-                System.out.println("Thread could not sleep.");
-            }
-        }
-    }*/
-
-    /*private void terminateSpeech()
-    {
-        IndependentVoiceSynth independentVoiceSynth = new IndependentVoiceSynth(" ");
-        independentVoiceSynth.start();
-        while (independentVoiceSynth.isAlive())
-        {
-            try {
-                Thread.sleep(50);
-            }catch (Exception e)
-            {
-                System.out.println("Thread could not sleep.");
-            }
-        }
-        independentVoiceSynth.terminate();
-    }*/
-
     @Override
     public void run() {
         super.run();
@@ -99,6 +65,7 @@ public class TextToSpeechServer extends Thread{
 
                 socket = server.accept();
                 System.out.println("Client accepted");
+                socket.setSoTimeout(5000);
 
                 // takes input from the client socket
                 in = new DataInputStream(

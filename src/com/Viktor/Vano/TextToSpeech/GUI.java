@@ -17,7 +17,7 @@ import java.util.Objects;
 import static com.Viktor.Vano.TextToSpeech.FileManager.*;
 
 public class GUI extends Application {
-    private final String version = "20220703";
+    private final String version = "20220715";
     private int port = 7775;
     private final int width = 400;
     private final int height = 120;
