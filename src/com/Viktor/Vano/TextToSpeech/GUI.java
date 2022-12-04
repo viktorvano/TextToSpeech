@@ -2,6 +2,7 @@ package com.Viktor.Vano.TextToSpeech;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
@@ -17,7 +18,7 @@ import java.util.Objects;
 import static com.Viktor.Vano.TextToSpeech.FileManager.*;
 
 public class GUI extends Application {
-    private final String version = "20220715";
+    private final String version = "20221204";
     private int port = 7775;
     private final int width = 400;
     private final int height = 120;
@@ -56,6 +57,13 @@ public class GUI extends Application {
         labelPort.setLayoutX(130);
         labelPort.setLayoutY(50);
         pane.getChildren().add(labelPort);
+
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setLayoutX(30);
+        progressBar.setLayoutY(90);
+        progressBar.setPrefWidth(350);
+        progressBar.setStyle("-fx-accent: red");
+        pane.getChildren().add(progressBar);
 
         try
         {
