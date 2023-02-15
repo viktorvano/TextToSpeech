@@ -18,7 +18,7 @@ import java.util.Objects;
 import static com.Viktor.Vano.TextToSpeech.FileManager.*;
 
 public class GUI extends Application {
-    private final String version = "20221204";
+    private final String version = "20230215";
     private int port = 7775;
     private final int width = 400;
     private final int height = 120;
@@ -64,6 +64,13 @@ public class GUI extends Application {
         progressBar.setPrefWidth(350);
         progressBar.setStyle("-fx-accent: red");
         pane.getChildren().add(progressBar);
+
+        pane.setOnMouseClicked(event -> {
+            if(pane.getChildren().contains(progressBar))
+                pane.getChildren().remove(progressBar);
+            else
+                pane.getChildren().add(progressBar);
+        });
 
         try
         {
