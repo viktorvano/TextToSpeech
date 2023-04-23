@@ -18,10 +18,10 @@ import java.util.Objects;
 import static com.Viktor.Vano.TextToSpeech.FileManager.*;
 
 public class GUI extends Application {
-    private final String version = "20230215";
+    private final String version = "20230423";
     private int port = 7775;
-    private final int width = 400;
-    private final int height = 120;
+    private final int width = 450;
+    private final int height = 150;
     private TextToSpeechServer textToSpeechServer;
 
     public static void main(String[] args)
@@ -54,14 +54,14 @@ public class GUI extends Application {
 
         Label labelPort = new Label("Port: " + port);
         labelPort.setFont(Font.font("Arial", 24));
-        labelPort.setLayoutX(130);
-        labelPort.setLayoutY(50);
+        labelPort.setLayoutX(160);
+        labelPort.setLayoutY(80);
         pane.getChildren().add(labelPort);
 
         ProgressBar progressBar = new ProgressBar();
         progressBar.setLayoutX(30);
-        progressBar.setLayoutY(90);
-        progressBar.setPrefWidth(350);
+        progressBar.setLayoutY(120);
+        progressBar.setPrefWidth(400);
         progressBar.setStyle("-fx-accent: red");
         pane.getChildren().add(progressBar);
 
@@ -118,8 +118,15 @@ public class GUI extends Application {
 
         System.out.println("\n\nUsing audio output device [" + audioIndex + "]:");
         Mixer.Info info = audios.get(audioIndex);
-        System.out.println(String.format("Name [%s]\nDescription [%s]", info.getName(), info.getDescription()));
+        System.out.println(String.format("Name: [%s]\nDescription: [%s]", info.getName(), info.getDescription()));
         System.out.println("\n\n");
+
+        Label labelAudio = new Label("Audio Output Device [" + audioIndex + "]:\n" +
+                String.format("Name: [%s]\nDescription: [%s]", info.getName(), info.getDescription()));
+        labelAudio.setFont(Font.font("Arial", 16));
+        labelAudio.setLayoutX(30);
+        labelAudio.setLayoutY(5);
+        pane.getChildren().add(labelAudio);
 
         textToSpeechServer = new TextToSpeechServer(port, audios.get(audioIndex));
         textToSpeechServer.start();
