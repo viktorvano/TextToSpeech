@@ -22,6 +22,12 @@ public class TextToSpeechServer extends Thread{
         message = "";
     }
 
+    public void setMixerInfo(Mixer.Info info)
+    {
+        if(info != null)
+            this.info = info;
+    }
+
     public void stopServer()
     {
         this.run = false;
