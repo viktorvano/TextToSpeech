@@ -1,6 +1,8 @@
 package com.Viktor.Vano.TextToSpeech;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
@@ -18,11 +20,14 @@ import java.util.Objects;
 import static com.Viktor.Vano.TextToSpeech.FileManager.*;
 
 public class GUI extends Application {
-    private final String version = "20230423";
+    private final String version = "20240606";
     private int port = 7775;
     private final int width = 450;
     private final int height = 150;
     private TextToSpeechServer textToSpeechServer;
+    public int audioIndex = 0;
+    private ArrayList<Mixer.Info> audios;
+    private final ComboBox<String> comboBox = new ComboBox<>();
 
     public static void main(String[] args)
     {
@@ -90,9 +95,48 @@ public class GUI extends Application {
             }
         }
 
+        setupAudioDevices();
+
+        addAudioDevicesToComboBox();
+        comboBox.getSelectionModel().select(audioIndex);
+        comboBox.setLayoutX(30);
+        comboBox.setLayoutY(40);
+        pane.getChildren().add(comboBox);
+
+        comboBox.setOnAction(event -> {
+            int selectedIndex = comboBox.getSelectionModel().getSelectedIndex();
+            if(selectedIndex != -1)
+            {
+                writeToFile("tts_audio.txt", String.valueOf(selectedIndex));
+                System.out.println("\n\nUsing audio output device [" + selectedIndex + "]:");
+                Mixer.Info selectedInfo = audios.get(selectedIndex);
+                System.out.println(String.format("Name: [%s]\nDescription: [%s]", selectedInfo.getName(), selectedInfo.getDescription()));
+                System.out.println("\n\n");
+                updateAudioDevice(audios.get(selectedIndex));  // Update the server with the new device
+            }
+        });
+
+        Button buttonRefresh = new Button("Refresh device list");
+        buttonRefresh.setLayoutX(30);
+        buttonRefresh.setLayoutY(10);
+        buttonRefresh.setOnAction(event -> {
+            clearAudioDevicesFromComboBox();
+            addAudioDevicesToComboBox();
+            audioIndex = 0;
+            writeToFile("tts_audio.txt", "0");
+            comboBox.getSelectionModel().select(0);
+        });
+        pane.getChildren().add(buttonRefresh);
+
+        textToSpeechServer = new TextToSpeechServer(port, audios.get(audioIndex));
+        textToSpeechServer.start();
+    }
+
+    public void setupAudioDevices()
+    {
         // Param for playback (input) device.
         Line.Info playbackLine = new Line.Info(SourceDataLine.class);
-        ArrayList<Mixer.Info> audios = filterDevices(playbackLine);
+        audios = filterDevices(playbackLine);
 
         System.out.println("\n\nFound audio devices:\n");
         for(int i = 0; i < audios.size(); i++)
@@ -102,7 +146,6 @@ public class GUI extends Application {
             System.out.println("\n");
         }
 
-        int audioIndex = 0;
         try{
             audioIndex = Integer.parseInt(Objects.requireNonNull(readOrCreateFile("tts_audio.txt")));
         }catch (Exception e)
@@ -120,16 +163,24 @@ public class GUI extends Application {
         Mixer.Info info = audios.get(audioIndex);
         System.out.println(String.format("Name: [%s]\nDescription: [%s]", info.getName(), info.getDescription()));
         System.out.println("\n\n");
+    }
 
-        Label labelAudio = new Label("Audio Output Device [" + audioIndex + "]:\n" +
-                String.format("Name: [%s]\nDescription: [%s]", info.getName(), info.getDescription()));
-        labelAudio.setFont(Font.font("Arial", 16));
-        labelAudio.setLayoutX(30);
-        labelAudio.setLayoutY(5);
-        pane.getChildren().add(labelAudio);
+    private void addAudioDevicesToComboBox()
+    {
+        for (Mixer.Info mixerInfo : audios) {
+            comboBox.getItems().add(mixerInfo.getName());
+        }
+    }
 
-        textToSpeechServer = new TextToSpeechServer(port, audios.get(audioIndex));
-        textToSpeechServer.start();
+    private void clearAudioDevicesFromComboBox()
+    {
+        comboBox.getItems().clear();
+    }
+
+    public void updateAudioDevice(Mixer.Info newAudioDevice) {
+        // Logic to update the audio device
+        // This might involve restarting the playback line with the new device
+        textToSpeechServer.setMixerInfo(newAudioDevice);
     }
 
     private static ArrayList<Mixer.Info> filterDevices(final Line.Info supportedLine) {
